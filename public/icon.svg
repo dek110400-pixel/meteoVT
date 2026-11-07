@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Icona "carta escursionistica": carta, una cima in inchiostro con le curve di livello, il rombo rosso della stazione. -->
+  <defs>
+    <clipPath id="m"><path d="M6 174 L66 78 L84 100 L108 50 L174 174 Z"/></clipPath>
+  </defs>
+  <rect width="180" height="180" fill="#fbfaf6"/>
+  <path d="M6 174 L66 78 L84 100 L108 50 L174 174 Z" fill="#2b2118"/>
+  <g clip-path="url(#m)" fill="none" stroke="#fbfaf6" stroke-width="2.6" stroke-linecap="round" opacity="0.5">
+    <path d="M0 150 C40 140 70 128 100 132 C130 136 150 144 180 140"/>
+    <path d="M30 124 C56 114 78 112 100 108 C120 104 136 112 160 118"/>
+    <path d="M60 96 C76 92 92 86 106 82 C118 80 128 86 140 92"/>
+  </g>
+  <path d="M108 50 L95 78 L103 74 L109 84 L116 72 L124 80 Z" fill="#fbfaf6"/>
+  <rect x="94" y="16" width="28" height="28" transform="rotate(45 108 30)" fill="#c8322a" stroke="#fbfaf6" stroke-width="4"/>
+  <rect x="0" y="0" width="180" height="180" fill="none" stroke="#2b2118" stroke-width="8"/>
+</svg>
