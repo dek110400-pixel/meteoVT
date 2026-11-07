@@ -1,5 +1,6 @@
 // Controlli sulle scale dei layer. Uso: npx tsx scripts/test-scales.ts
 import assert from 'node:assert/strict';
+import { round0 } from '../src/format';
 import { snowRadius, tempColor, tempRange, windColor, windLength } from '../src/scales';
 
 assert.equal(tempColor(-50), '#24317a'); // fuori scala → estremo
@@ -15,4 +16,5 @@ assert.deepEqual(tempRange([3.2, 7.4, -1.4]), [-5, 10]); // multipli di 5, ampie
 assert.deepEqual(tempRange([12, 13]), [5, 20]); // allargata fino a 15 °C
 assert.deepEqual(tempRange([-12, 28]), [-15, 30]);
 assert.deepEqual(tempRange([]), [-5, 15]);
+assert.ok(Object.is(round0(-0.4), 0) && round0(-0.6) === -1 && round0(2.5) === 3); // niente "-0" nelle etichette
 console.log('✓ scale ok');

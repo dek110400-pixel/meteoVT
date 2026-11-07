@@ -1,6 +1,6 @@
 // Test Fase 3: parser ARPAV offline + chiamata reale a Windy e all'elenco ARPAV. Uso: npm run test:webcams
 import assert from 'node:assert/strict';
-import { getWebcams, parseArpavWebcamPage } from '../server/webcams';
+import { cleanTitle, getWebcams, parseArpavWebcamPage } from '../server/webcams';
 
 try { process.loadEnvFile('.env.local'); } catch { /* senza file: Windy segnalerà la chiave mancante */ }
 
@@ -11,6 +11,8 @@ const p = parseArpavWebcamPage(html);
 assert.equal(p.length, 2); // la terza non ha coordinate → scartata
 assert.equal(p[1].name, "Rif. Dell'Antelao");
 assert.deepEqual([p[0].lat, p[0].lon], [46.47, 11.86]);
+assert.equal(cleanTitle('Primiero San Martino di Castrozza: Val di Fiemme, Italy'), 'Primiero San Martino di Castrozza: Val di Fiemme');
+assert.equal(cleanTitle('Italy View, Cortina'), 'Italy View, Cortina'); // il paese si toglie solo in fondo
 console.log('✓ parser ARPAV ok\n');
 
 const t0 = Date.now();

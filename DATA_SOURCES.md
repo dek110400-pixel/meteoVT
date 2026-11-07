@@ -217,3 +217,17 @@ evita di rifarle a ogni utente.
 Nessuna fonte nuova: gli stessi file per stazione già usati per i dati live contengono la serie
 (ARPAV ~3 giorni ogni 30', Meteotrentino da ieri 00:00 ogni 15'). Il file ARPAV si ricava dall'id:
 `IDSTAZ` a 4 cifre + `.xml` (verificato su 233/233 stazioni).
+
+## 7. Previsioni — Open-Meteo ✅ verificata 2026-11-07
+- **URL:** `https://api.open-meteo.com/v1/forecast?latitude=…&longitude=…&elevation=<quota stazione>&hourly=temperature_2m,precipitation,snowfall,wind_speed_10m,wind_gusts_10m,wind_direction_10m,freezing_level_height&models=icon_seamless&forecast_days=3&timezone=GMT&wind_speed_unit=kmh&timeformat=unixtime`
+- **Modello:** `icon_seamless` (DWD): ICON-D2 ~2 km per le prime ~48 h, poi ICON-EU. `elevation` corregge la temperatura alla quota della stazione.
+- **Formato:** JSON, `hourly.time` (secondi Unix UTC) + un array per variabile; unità °C, mm, cm, km/h, gradi, m. Chiamata di prova: 72 ore, nessun valore nullo.
+- **Termini:** uso **non commerciale** gratuito, < 10.000 chiamate/giorno, 5.000/ora, 600/minuto. Attribuzione "Previsioni Open-Meteo.com" (CC BY 4.0) mostrata sulla mappa.
+- **Cache:** 1 ora per coordinate arrotondate (~100 m): poche decine di chiamate al giorno.
+- Sono **previsioni di modello**: nell'app sono sempre tratteggiate ed etichettate "previsione", mai mescolate con i dati misurati.
+- **Zero termico** = `freezing_level_height` del modello (m s.l.m.).
+
+## 8. Timelapse webcam — Windy player ✅ verificato 2026-11-07
+- Con `include=player` l'API restituisce `player.day` (es. `https://webcams.windy.com/webcams/public/embed/player/<id>/day`).
+- La pagina del player risponde 200 senza `X-Frame-Options` né CSP `frame-ancestors` → incorporabile in un `<iframe>`.
+- Il piano gratuito permette esplicitamente di incorporare il timelapse. Solo per le webcam Windy (le ARPAV non hanno timelapse).

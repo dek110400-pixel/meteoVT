@@ -3,6 +3,9 @@ import type { Station } from '../server/types';
 export const STALE_MS = 60 * 60_000; // dato più vecchio di 1 ora → grigio
 
 const nf = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1 });
+/** Arrotonda all'intero senza "-0" (Math.round(-0.4) dà -0). */
+export const round0 = (x: number) => Math.round(x) + 0;
+
 export const fmt = (v: number | null, unit = '') => (v == null ? 'n.d.' : `${nf.format(v)}${unit}`);
 
 export const isOld = (iso: string | null, now = Date.now()) => !iso || now - Date.parse(iso) > STALE_MS;
@@ -32,5 +35,8 @@ export function age(iso: string | null, now = Date.now()) {
 
 const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
 export const cardinal = (deg: number | null) => (deg == null ? '' : DIRS[Math.round(deg / 45) % 8]);
+const WORDS = ['nord', 'nord-est', 'est', 'sud-est', 'sud', 'sud-ovest', 'ovest', 'nord-ovest'];
+/** Direzione a parole: nelle intestazioni in maiuscolo condensato una "O" sola sembra uno zero. */
+export const cardinalWord = (deg: number | null) => (deg == null ? '' : WORDS[Math.round(deg / 45) % 8]);
 
 export const SOURCE_LABEL: Record<Station['source'], string> = { arpav: 'ARPAV', meteotrentino: 'Meteotrentino' };

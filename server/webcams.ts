@@ -3,13 +3,16 @@ import type { SourceError, Webcam } from './types.js';
 import { fetchText, mapLimit } from './util.js';
 
 // ---------- Windy ----------
+
+/** "Primiero: Val di Fiemme, Italy" → "Primiero: Val di Fiemme" (il paese è ovvio su una mappa di Veneto e Trentino). */
+export const cleanTitle = (t: string) => t.replace(/,\s*(Italy|Italia|Austria|Österreich|Switzerland|Schweiz|Slovenia)\s*$/i, '').trim();
 const WINDY = 'https://api.windy.com/webcams/api/v3/webcams';
 const PAGE = 50; // massimo consentito per pagina; il piano free permette offset fino a 1000
 
 export async function fetchWindy(key = process.env.WINDY_API_KEY): Promise<Webcam[]> {
   if (!key) throw new Error('WINDY_API_KEY non impostata');
   const page = async (offset: number) => {
-    const url = `${WINDY}?regions=IT.20,IT.17&limit=${PAGE}&offset=${offset}&include=location,images,urls`;
+    const url = `${WINDY}?regions=IT.20,IT.17&limit=${PAGE}&offset=${offset}&include=location,images,urls,player`;
     const res = await fetch(url, { headers: { 'x-windy-api-key': key }, signal: AbortSignal.timeout(10_000) });
     if (!res.ok) throw new Error(`Windy HTTP ${res.status}`);
     return (await res.json()) as { total: number; webcams: any[] };
@@ -24,13 +27,14 @@ export async function fetchWindy(key = process.env.WINDY_API_KEY): Promise<Webca
     .map((w) => ({
       id: `windy:${w.webcamId}`,
       source: 'windy',
-      name: String(w.title),
+      name: cleanTitle(String(w.title)),
       lat: Number(w.location.latitude),
       lon: Number(w.location.longitude),
       elevation: null, // Windy non fornisce la quota
       imageUrl: w.images.current.preview, // 400×224, URL valido ~15 min (piano free)
       pageUrl: w.urls?.detail ?? `https://windy.com/webcams/${w.webcamId}`, // link a windy.com obbligatorio
       updatedAt: w.lastUpdatedOn ?? null,
+      timelapseUrl: w.player?.day ?? null, // player incorporabile (piano free: consentito)
     }));
 }
 
@@ -95,6 +99,7 @@ export async function fetchArpavWebcams(): Promise<Webcam[]> {
       imageUrl: `/api/webcam-image?id=${c.n}`, // via proxy: molte sono solo http e il browser le bloccherebbe su https
       pageUrl: c.url,
       updatedAt: p.lastModified,
+      timelapseUrl: null, // le webcam ARPAV non hanno timelapse
     }));
 }
 

@@ -28,7 +28,8 @@ const CAM_RADIUS_KM = 10;
 const ATTRIBUTION =
   'Mappa © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)' +
   ' · Dati <a href="https://www.arpa.veneto.it" title="Dati non validati, pubblicati in automatico">ARPAV</a>, <a href="https://www.meteotrentino.it">Meteotrentino</a> (CC BY 4.0)' +
-  ' · Webcam <a href="https://www.windy.com/webcams">Windy.com</a> e proprietari indicati';
+  ' · Webcam <a href="https://www.windy.com/webcams">Windy.com</a> e proprietari indicati' +
+  ' · Previsioni <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)';
 
 const SOURCE_NAME: Record<string, string> = { arpav: 'ARPAV', meteotrentino: 'Meteotrentino', windy: 'Windy' };
 

@@ -30,6 +30,7 @@ export interface Webcam {
   imageUrl: string;
   pageUrl: string;
   updatedAt: string | null;
+  timelapseUrl?: string | null; // timelapse delle ultime 24 h (solo Windy)
 }
 
 export interface SourceError {

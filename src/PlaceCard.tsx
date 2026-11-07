@@ -2,8 +2,9 @@ import { X } from 'lucide-react';
 import type { Station, Webcam } from '../server/types';
 import type { Place } from '../server/geocode';
 import type { FavKind } from './favorites';
-import { cardinal, fmt, isStale, when } from './format';
+import { cardinal, fmt, isStale, round0, when } from './format';
 import { WindArrow } from './WindArrow';
+import { useForecast } from './useForecast';
 
 const dist = (km: number) => (km < 1 ? `${Math.round(km * 1000)} m` : `${km.toLocaleString('it-IT', { maximumFractionDigits: 1 })} km`);
 
@@ -19,6 +20,13 @@ interface Props {
 /** Riquadro della località cercata: stazione e webcam più vicine, toccabili. */
 export function PlaceCard({ place, station, cam, version, onPick, onClose }: Props) {
   const s = station?.item;
+  const { forecast, state } = useForecast(place.lat, place.lon, null);
+  const next = (p: [number, number][] | undefined) => (p ?? []).slice(0, 12); // prossime 12 ore
+  const vals = (p: [number, number][] | undefined) => next(p).map((x) => x[1]);
+  const t = vals(forecast?.temp);
+  const g = vals(forecast?.windGust);
+  const rain = Math.round(vals(forecast?.precip).reduce((a, b) => a + b, 0) * 10) / 10;
+  const zero = forecast?.freezing[0]?.[1];
   const camSrc = cam && (cam.item.source === 'arpav' ? `${cam.item.imageUrl}&v=${encodeURIComponent(version)}` : cam.item.imageUrl);
   return (
     <section className="sheet place" aria-label={`Località ${place.name}`}>
@@ -31,6 +39,32 @@ export function PlaceCard({ place, station, cam, version, onPick, onClose }: Pro
           <X size={22} />
         </button>
       </header>
+
+      <div className="place-fc">
+        <span className="near-k">Prossime 12 ore · previsione</span>
+        {state === 'loading' && <span className="place-fc-row">…</span>}
+        {state === 'error' && <span className="place-fc-row nd">Previsioni non disponibili ora.</span>}
+        {forecast && t.length > 0 && (
+          <span className="place-fc-row">
+            <span>
+              <strong>
+                {fmt(round0(Math.min(...t)))}…{fmt(round0(Math.max(...t)), '°')}
+              </strong>
+            </span>
+            <span>
+              raffiche fino a <strong>{fmt(Math.round(Math.max(...g)))}</strong> km/h
+            </span>
+            <span>
+              pioggia <strong>{fmt(rain)}</strong> mm
+            </span>
+            {zero != null && (
+              <span>
+                zero termico <strong>{fmt(Math.round(zero / 10) * 10)}</strong> m
+              </span>
+            )}
+          </span>
+        )}
+      </div>
 
       <div className="place-near">
         {s ? (

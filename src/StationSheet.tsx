@@ -1,10 +1,11 @@
 import { X } from 'lucide-react';
 import { StarButton } from './StarButton';
 import type { Station, Webcam } from '../server/types';
-import { age, cardinal, fmt, isStale, SOURCE_LABEL, when } from './format';
+import { age, cardinalWord, fmt, isStale, SOURCE_LABEL, when } from './format';
 import { WindArrow } from './WindArrow';
 import { WebcamImage } from './WebcamImage';
 import { HistoryCharts } from './HistoryCharts';
+import { nowValue, useForecast } from './useForecast';
 
 const nd = (v: number | null) => (v == null ? 'nd' : '');
 
@@ -20,6 +21,8 @@ interface Props {
 
 export function StationSheet({ station: s, cam, version, onClose, fav, onToggleFav }: Props) {
   const stale = isStale(s);
+  const { forecast, state: fcState } = useForecast(s.lat, s.lon, s.elevation);
+  const zero = nowValue(forecast?.freezing);
   return (
     <section className="sheet" aria-label={`Stazione ${s.name}`}>
       {cam && (
@@ -55,7 +58,7 @@ export function StationSheet({ station: s, cam, version, onClose, fav, onToggleF
         </div>
         {/* vento e raffica nella prima riga: per l'uso in montagna e negli sport di vento contano subito dopo la temperatura */}
         <div className="r r--wind">
-          <dt>Vento{s.windDir != null && ` da ${cardinal(s.windDir)}`}</dt>
+          <dt>Vento{s.windDir != null && ` da ${cardinalWord(s.windDir)}`}</dt>
           <dd className={nd(s.windSpeed)}>
             {s.windDir != null && <WindArrow deg={s.windDir} />}
             {fmt(s.windSpeed)}
@@ -87,9 +90,16 @@ export function StationSheet({ station: s, cam, version, onClose, fav, onToggleF
             <dd>{fmt(s.snowDepth, ' cm')}</dd>
           </div>
         )}
+        <div className="r r--zero">
+          <dt>Zero termico · previsione</dt>
+          <dd className={nd(zero)}>
+            {zero == null ? (fcState === 'loading' ? '…' : 'n.d.') : `${fmt(Math.round(zero / 10) * 10)} m`}
+            {zero != null && <small>{zero > s.elevation ? `${fmt(Math.round((zero - s.elevation) / 10) * 10)} m sopra la stazione` : `${fmt(Math.round((s.elevation - zero) / 10) * 10)} m sotto la stazione`}</small>}
+          </dd>
+        </div>
       </dl>
 
-      <HistoryCharts id={s.id} />
+      <HistoryCharts id={s.id} forecast={forecast} forecastState={fcState} elevation={s.elevation} />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import type { Station, Webcam } from '../server/types';
-import { fmt, isOld, isStale } from './format';
+import { fmt, isOld, isStale, round0 } from './format';
 import { type Layer, snowRadius, tempColor, windColor, windLength } from './scales';
 
 const cls = (...c: (string | false)[]) => c.filter(Boolean).join(' ');
@@ -79,7 +79,7 @@ export function clusterLabel(items: Station[], layer: Layer): string {
   const lo = Math.min(...v);
   const hi = Math.max(...v);
   if (layer === 'temp') {
-    const [a, b] = [Math.round(lo), Math.round(hi)];
+    const [a, b] = [round0(lo), round0(hi)];
     return a === b ? fmt(a, '°') : `${fmt(a)}…${fmt(b, '°')}`;
   }
   if (layer === 'wind') return `max ${fmt(Math.round(hi))}`;
