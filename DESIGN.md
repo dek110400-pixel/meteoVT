@@ -14,6 +14,9 @@ colors:
   stale-fill: "#cfc7bb"
   snow-fill: "rgba(159, 205, 233, 0.85)"
   hairline: "rgba(43, 33, 24, 0.28)"
+  freezing-line: "#164a80" # isoipsa dello zero termico sulla mappa (blu più scuro del lago: si legge sopra il rilievo)
+  freezing-ice: "rgba(111, 168, 214, 0.55)" # terreno sopra lo zero termico (sotto 0 °C), anche nella chiave della legenda
+  freezing-ice-edge: "rgba(22, 74, 128, 0.35)"
 typography:
   title:
     fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"

@@ -12,7 +12,9 @@ import { clock } from './format';
 import { nearest } from './geo';
 import { clusterLabel, placeIcon, stationIcon, webcamIcon } from './icons';
 import { MarkerLayer } from './MarkerLayer';
-import { LayerPanel, tempRange, useLayer } from './LayerPanel';
+import { LayerPanel, tempRange, useLayer, ZERO_HOURS } from './LayerPanel';
+import { FreezingLayer } from './FreezingLayer';
+import type { FreezingGrid } from '../server/freezing';
 import { SearchBar } from './SearchBar';
 import { PlaceCard } from './PlaceCard';
 import { isStale } from './format';
@@ -29,7 +31,8 @@ const ATTRIBUTION =
   'Mappa © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)' +
   ' · Dati <a href="https://www.arpa.veneto.it" title="Dati non validati, pubblicati in automatico">ARPAV</a>, <a href="https://www.meteotrentino.it">Meteotrentino</a> (CC BY 4.0)' +
   ' · Webcam <a href="https://www.windy.com/webcams">Windy.com</a> e proprietari indicati' +
-  ' · Previsioni <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)';
+  ' · Previsioni <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)' +
+  ' · Quote <a href="https://registry.opendata.aws/terrain-tiles/">Terrain Tiles</a> (Mapzen, SRTM, EU-DEM)';
 
 const SOURCE_NAME: Record<string, string> = { arpav: 'ARPAV', meteotrentino: 'Meteotrentino', windy: 'Windy' };
 
@@ -82,15 +85,40 @@ export default function App() {
   // La stazione selezionata resta sempre sulla mappa, anche se non ha il dato del layer.
   const selId = sel?.kind === 'station' ? sel.id : null;
   const shown = useMemo(() => {
-    if (layer === 'temp') return stations;
+    if (layer === 'temp' || layer === 'zero') return stations;
     const has = (s: Station) => (layer === 'snow' ? s.snowDepth : s.windSpeed) != null || s.id === selId;
     return stations.filter(has);
   }, [layer, stations, selId]);
   const withData = useMemo(
-    () => stations.filter((s) => (layer === 'temp' ? s.temp : layer === 'wind' ? s.windSpeed : s.snowDepth) != null).length,
+    () => stations.filter((s) => (layer === 'temp' || layer === 'zero' ? s.temp : layer === 'wind' ? s.windSpeed : s.snowDepth) != null).length,
     [layer, stations],
   );
   const icon = useCallback((s: Station, selected: boolean) => stationIcon(s, selected, layer), [layer]);
+
+  // Zero termico sulla mappa: griglia di previsione caricata solo quando il layer è attivo
+  const [zeroHour, setZeroHour] = useState(0);
+  const [grid, setGrid] = useState<{ data: FreezingGrid | null; state: 'loading' | 'ok' | 'error' }>({ data: null, state: 'loading' });
+  useEffect(() => {
+    if (layer !== 'zero' || grid.data) return;
+    let off = false;
+    fetch('/api/freezing-grid')
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((j: FreezingGrid) => !off && setGrid({ data: j, state: 'ok' }))
+      .catch(() => !off && setGrid({ data: null, state: 'error' }));
+    return () => {
+      off = true;
+    };
+  }, [layer, grid.data]);
+  const gridIdx = grid.data ? Math.min(ZERO_HOURS[zeroHour], grid.data.times.length - 1) : 0;
+  const gridVals = grid.data?.values[gridIdx]?.filter((v): v is number => v != null) ?? [];
+  const zero = {
+    hour: zeroHour,
+    onHour: setZeroHour,
+    state: grid.state,
+    at: grid.data?.times[gridIdx] ?? null,
+    min: gridVals.length ? Math.round(Math.min(...gridVals) / 10) * 10 : null,
+    max: gridVals.length ? Math.round(Math.max(...gridVals) / 10) * 10 : null,
+  };
   // Scala temperatura della banda adattata ai valori freschi di oggi
   const range = useMemo(() => tempRange(stations.filter((s) => s.temp != null && !isStale(s)).map((s) => s.temp!)), [stations]);
   const clLabel = useCallback((items: Station[]) => clusterLabel(items, layer), [layer]);
@@ -191,6 +219,7 @@ export default function App() {
         <TileLayer url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" subdomains="abc" maxZoom={17} attribution={ATTRIBUTION} />
         <AttributionControl prefix={false} />
         <ZoomButtons />
+        {layer === 'zero' && grid.data && <FreezingLayer grid={grid.data} hour={gridIdx} />}
         <Pane name="cams" style={{ zIndex: 590 }} />
         <MarkerLayer
           items={webcams}
@@ -216,7 +245,7 @@ export default function App() {
         <MapController point={point} fly={fly} onClear={clearAll} />
       </MapContainer>
 
-      <LayerPanel layer={layer} onChange={setLayer} count={withData} range={range} />
+      <LayerPanel layer={layer} onChange={setLayer} count={withData} range={range} zero={zero} />
       {place && !sel && placeNear && (
         <PlaceCard place={place} station={placeNear.station} cam={placeNear.cam} version={version} onPick={pickItem} onClose={() => setPlace(null)} />
       )}

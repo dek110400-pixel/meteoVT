@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import type { Station, Webcam } from '../server/types';
 import { fmt, isOld, isStale, round0 } from './format';
-import { type Layer, snowRadius, tempColor, windColor, windLength } from './scales';
+import { type Layer, markerLayer, snowRadius, tempColor, windColor, windLength } from './scales';
 
 const cls = (...c: (string | false)[]) => c.filter(Boolean).join(' ');
 const label = (text: string, left: number) => `<span class="st-lbl" style="left:${left}px">${text}</span>`;
@@ -12,6 +12,7 @@ const dot = (s: Station, selected: boolean) =>
 
 // Firma della direzione: ogni stazione è un simbolo cartografico con il valore "letterato" accanto, come una quota.
 export function stationIcon(s: Station, selected: boolean, layer: Layer): L.DivIcon {
+  layer = markerLayer(layer);
   const stale = isStale(s);
   const base = cls('st', `st--${layer}`, stale && 'st--stale', selected && 'st--sel');
 
@@ -73,6 +74,7 @@ export function webcamIcon(c: Webcam, selected: boolean) {
 
 /** Etichetta del cluster per il layer attivo: intervallo dei valori misurati (solo dati freschi e presenti). */
 export function clusterLabel(items: Station[], layer: Layer): string {
+  layer = markerLayer(layer);
   const pick = (s: Station) => (layer === 'temp' ? s.temp : layer === 'wind' ? s.windSpeed : s.snowDepth);
   const v = items.filter((s) => !isStale(s)).map(pick).filter((x): x is number => x != null);
   if (!v.length) return '';

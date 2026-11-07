@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Snowflake, Thermometer, Wind } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MountainSnow, Snowflake, Thermometer, Wind } from 'lucide-react';
 import { type Layer, snowRadius, tempColor, WIND_CLASSES, windLength } from './scales';
 export { tempRange } from './scales';
 
@@ -7,7 +7,12 @@ const LAYERS: { id: Layer; label: string; Icon: typeof Wind }[] = [
   { id: 'temp', label: 'Temperatura', Icon: Thermometer },
   { id: 'wind', label: 'Vento', Icon: Wind },
   { id: 'snow', label: 'Neve', Icon: Snowflake },
+  { id: 'zero', label: 'Zero termico', Icon: MountainSnow },
 ];
+
+/** Ore di previsione proposte per lo zero termico (scostamento dall'ora corrente). */
+export const ZERO_HOURS = [0, 6, 12, 24] as const;
+const hourLabel = (i: number) => (ZERO_HOURS[i] === 0 ? 'ora' : `+${ZERO_HOURS[i]}h`);
 
 const KEY = 'meteo:layer';
 
@@ -33,10 +38,12 @@ interface Props {
   /** Quante stazioni hanno il dato del layer attivo. */
   count: number;
   range: [number, number];
+  /** Zero termico: ora scelta (indice in ZERO_HOURS), intervallo nell'area, ora di validità. */
+  zero?: { hour: number; onHour: (h: number) => void; min: number | null; max: number | null; at: number | null; state: 'loading' | 'ok' | 'error' };
 }
 
 /** Banda stretta sul bordo sinistro: 3 layer e la scala compatta. Toccando la scala si apre la legenda completa. */
-export function LayerPanel({ layer, onChange, count, range }: Props) {
+export function LayerPanel({ layer, onChange, count, range, zero }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <div className={`band${open ? ' is-open' : ''}`}>
@@ -52,8 +59,20 @@ export function LayerPanel({ layer, onChange, count, range }: Props) {
           {layer === 'temp' && <TempMini range={range} />}
           {layer === 'wind' && <WindMini />}
           {layer === 'snow' && <SnowMini />}
+          {layer === 'zero' && <ZeroMini />}
           {open ? <ChevronLeft size={18} aria-hidden="true" /> : <ChevronRight size={18} aria-hidden="true" />}
         </button>
+        {layer === 'zero' && zero && (
+          // un solo pulsante che scorre le ore (ora → +6h → +12h → +24h): la banda resta corta sul telefono
+          <button
+            className="band-hour"
+            onClick={() => zero.onHour((zero.hour + 1) % ZERO_HOURS.length)}
+            aria-label={`Zero termico: ${hourLabel(zero.hour)}. Tocca per l'ora successiva`}
+          >
+            <span>{hourLabel(zero.hour)}</span>
+            <ChevronRight size={14} aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {open && (
@@ -61,6 +80,7 @@ export function LayerPanel({ layer, onChange, count, range }: Props) {
           {layer === 'temp' && <TempLegend range={range} />}
           {layer === 'wind' && <WindLegend />}
           {layer === 'snow' && <SnowLegend />}
+          {layer === 'zero' && zero && <ZeroLegend {...zero} />}
           <p className="legend-foot">
             <span>
               <StationKey layer={layer} /> stazione
@@ -102,7 +122,48 @@ function StationKey({ layer }: { layer: Layer }) {
       {layer === 'temp' && <span className="key-dia" style={{ background: tempColor(10), outlineColor: 'var(--ink)' }} />}
       {layer === 'wind' && <Arrow color={WIND_CLASSES[1].color} />}
       {layer === 'snow' && <span className="st-snow" style={{ width: 14, height: 14 }} />}
+      {layer === 'zero' && <span className="key-dia" style={{ background: tempColor(0), outlineColor: 'var(--ink)' }} />}
     </span>
+  );
+}
+
+// --- zero termico ---
+
+function ZeroMini() {
+  return (
+    <span className="mini mini--zero">
+      <span className="mini-row">
+        <span className="key-ice" aria-hidden="true" />
+        &lt;0°
+      </span>
+      <span className="mini-row">
+        <span className="key-iso" aria-hidden="true" />
+        0°
+      </span>
+    </span>
+  );
+}
+
+function ZeroLegend({ min, max, at, state }: NonNullable<Props['zero']>) {
+  const when = at ? new Date(at).toLocaleString('it-IT', { weekday: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' }) : '';
+  return (
+    <>
+      <p className="legend-title">Zero termico · previsione {when}</p>
+      <ul className="legend-zero">
+        <li>
+          <span className="key-iso" aria-hidden="true" /> linea dello zero termico sul rilievo
+        </li>
+        <li>
+          <span className="key-ice" aria-hidden="true" /> terreno sopra lo zero termico: sotto 0 °C
+        </li>
+      </ul>
+      <p className="legend-note">
+        {state === 'loading' && 'Carico la previsione…'}
+        {state === 'error' && 'Previsione non disponibile ora.'}
+        {state === 'ok' && min != null && max != null && <>Nell'area lo zero termico va da {min.toLocaleString('it-IT')} a {max.toLocaleString('it-IT')} m. </>}
+        Modello ICON (Open-Meteo) su quote del terreno Terrain Tiles: è una previsione, non una misura.
+      </p>
+    </>
   );
 }
 

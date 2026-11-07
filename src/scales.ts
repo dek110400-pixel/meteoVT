@@ -1,6 +1,8 @@
 // Scale colore dei layer. Il valore è sempre stampato accanto al colore: il colore da solo non porta informazione.
 
-export type Layer = 'temp' | 'wind' | 'snow';
+export type Layer = 'temp' | 'wind' | 'snow' | 'zero';
+/** Il layer zero termico mostra le stazioni come il layer temperatura (lo 0 °C è il dato che conta lì). */
+export const markerLayer = (l: Layer): Exclude<Layer, 'zero'> => (l === 'zero' ? 'temp' : l);
 
 // Temperatura: scala continua dal blu al rosso.
 export const TEMP_STOPS: [number, string][] = [

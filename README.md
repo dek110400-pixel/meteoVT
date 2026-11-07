@@ -9,7 +9,7 @@ Stile "carta escursionistica", pensata per lo smartphone all'aperto.
 - Layer **Temperatura / Vento / Neve** in una banda stretta a sinistra (la scala della temperatura si adatta ai valori di oggi); il layer scelto resta dopo un refresh
 - **Ricerca località** (paesi, rifugi, passi, cime) con segnaposto e stazione/webcam più vicine
 - **Storico 24 ore + previsioni 24/48 ore** nella scheda della stazione, su un'unica linea del tempo: temperatura, vento e raffica, pioggia, neve, neve fresca prevista
-- **Zero termico** previsto, confrontato con la quota della stazione
+- **Zero termico** previsto, confrontato con la quota della stazione, e **sulla mappa** come linea sul rilievo (ora, +6, +12, +24 h)
 - **Timelapse 24 ore** delle webcam Windy
 - **Preferiti** (stellina) salvati nel browser, con pannello laterale e dati live
 - Dati più vecchi di 1 ora in grigio; un dato mancante è "n.d.", mai stimato
@@ -48,6 +48,7 @@ Il primo caricamento delle webcam richiede ~10 s: il server controlla quali webc
 | `npm run test:scales` | controlla scale colore, frecce del vento e cerchi della neve |
 | `npm run test:history` | scarica lo storico 24 h di una stazione per fonte e controlla la finestra temporale |
 | `npm run test:geocode` | cerca due località reali su OpenStreetMap (Nominatim) |
+| `npm run test:freezing` | controlla la griglia dello zero termico (interpolazione + chiamata reale) |
 | `npm run test:forecast` | controlla le previsioni Open-Meteo per Arabba (48 ore, zero termico) |
 
 ---
@@ -105,6 +106,7 @@ api/                  Vercel Functions (proxy verso le fonti)
   webcam-image.ts     GET /api/webcam-image?id=N – proxy immagini ARPAV (solo id dell'elenco)
   station-history.ts  GET /api/station-history?id=arpav:9 – ultime 24 ore di una stazione, cache 10 min
   geocode.ts          GET /api/geocode?q=… – ricerca località (Nominatim), cache 1 giorno
+  freezing-grid.ts    GET /api/freezing-grid – zero termico previsto su griglia 0,25°, cache 1 ora
   forecast.ts         GET /api/forecast?lat=…&lon=…&elev=… – previsioni 48 h (Open-Meteo, ICON), cache 1 ora
 server/               normalizzazione dei dati nel modello unico (Station, Webcam)
 src/                  frontend React + Leaflet

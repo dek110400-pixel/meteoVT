@@ -12,7 +12,8 @@
     "test:scales": "tsx scripts/test-scales.ts",
     "test:history": "tsx scripts/test-history.ts",
     "test:geocode": "tsx scripts/test-geocode.ts",
-    "test:forecast": "tsx scripts/test-forecast.ts"
+    "test:forecast": "tsx scripts/test-forecast.ts",
+    "test:freezing": "tsx scripts/test-freezing.ts"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.3.0",

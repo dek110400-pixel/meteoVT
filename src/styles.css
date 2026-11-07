@@ -232,7 +232,7 @@ h1, h2, p, dl, dd { margin: 0; }
 .key-st { background: var(--paper); border: 2px solid var(--ink); }
 .key-wc { width: 14px; height: 11px; border-radius: 2px; background: var(--paper); border: 2px solid var(--ink-2); }
 /* 6: zoom con icone */
-.zoom { position: absolute; z-index: 1000; right: 10px; bottom: 56px; display: flex; flex-direction: column; background: var(--paper); border: var(--rule); }
+.zoom { position: absolute; z-index: 1000; right: 10px; top: calc(var(--top) + 8px); display: flex; flex-direction: column; background: var(--paper); border: var(--rule); }
 .zoom .icon-btn + .icon-btn { border-top: var(--hair); }
 @media (min-width: 760px) { .has-favs .zoom { right: 370px; } }
 
@@ -401,3 +401,15 @@ h1, h2, p, dl, dd { margin: 0; }
   background: var(--paper); color: var(--ink); cursor: pointer; font: 700 13px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.04em;
 }
 .cam-lapse[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* --- layer zero termico --- */
+.band-hour {
+  display: flex; align-items: center; justify-content: center; gap: 1px; width: 44px; height: 40px; border: 0; border-top: 1px solid var(--ink);
+  background: var(--ink); color: var(--paper); cursor: pointer; font: 700 14px/1 var(--cond); font-variant-numeric: tabular-nums;
+}
+.mini--zero { flex-direction: column; gap: 6px; align-items: flex-start; padding: 2px 0; }
+.key-ice { display: inline-block; width: 14px; height: 12px; background: rgba(111, 168, 214, 0.55); border: 1px solid rgba(22, 74, 128, 0.35); vertical-align: -1px; }
+.key-iso { display: inline-block; width: 14px; height: 0; border-top: 3px solid #164a80; vertical-align: 3px; }
+.legend-zero { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font: 500 14px/1.25 var(--cond); color: var(--ink); }
+.legend-zero li { display: flex; align-items: center; gap: 6px; }
+.freezing-tile { width: 256px; height: 256px; } /* canvas a 512 px disegnato in 256: linea nitida anche sugli schermi retina */

@@ -231,3 +231,13 @@ Nessuna fonte nuova: gli stessi file per stazione già usati per i dati live con
 - Con `include=player` l'API restituisce `player.day` (es. `https://webcams.windy.com/webcams/public/embed/player/<id>/day`).
 - La pagina del player risponde 200 senza `X-Frame-Options` né CSP `frame-ancestors` → incorporabile in un `<iframe>`.
 - Il piano gratuito permette esplicitamente di incorporare il timelapse. Solo per le webcam Windy (le ARPAV non hanno timelapse).
+
+## 9. Zero termico sulla mappa ✅ verificato 2026-11-07
+- **Zero termico su griglia:** Open-Meteo multi-punto (`latitude=a,b,c…&longitude=…`), stessa chiamata del §7 con solo
+  `freezing_level_height`: 120 punti (passo 0,25°, 44,8–47,05 N, 10,4–13,15 E) in ~0,4 s. Cache 1 ora → ~2.900 punti/giorno.
+- **Quote del terreno:** AWS Terrain Tiles, formato Terrarium (`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png`),
+  quota = R·256 + G + B/256 − 32768 m. CORS aperto (`Access-Control-Allow-Origin: *`), nessuna chiave.
+  Fonti: SRTM, EU-DEM (Copernicus) e altre, elaborate da Mapzen → attribuzione "Terrain Tiles" sulla mappa.
+- **Calcolo nel browser:** per ogni pixel, zero termico interpolato (bilineare) tra i 4 punti di griglia; se la quota del terreno
+  supera lo zero termico il terreno è "sotto 0 °C". La linea è il confine tra le due zone. Fuori griglia o senza quota: niente disegno.
+- È una **previsione di modello** su un rilievo a ~10–40 m: indicativa, non una misura (scritto in legenda).
