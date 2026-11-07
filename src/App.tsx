@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AttributionControl, MapContainer, Pane, TileLayer, useMap, useMapEvent } from 'react-leaflet';
+import { AttributionControl, MapContainer, Marker, Pane, TileLayer, useMap, useMapEvent } from 'react-leaflet';
 import { ZoomButtons } from './ZoomButtons';
 import L from 'leaflet';
-import { RefreshCw, Star } from 'lucide-react';
+import { RefreshCw, Search, Star } from 'lucide-react';
 import type { Station } from '../server/types';
 import type { StationsPayload } from '../server/stations';
 import type { WebcamsPayload } from '../server/webcams';
+import type { Place } from '../server/geocode';
 import { useFeed } from './api';
 import { clock } from './format';
 import { nearest } from './geo';
-import { clusterLabel, stationIcon, webcamIcon } from './icons';
+import { clusterLabel, placeIcon, stationIcon, webcamIcon } from './icons';
 import { MarkerLayer } from './MarkerLayer';
-import { LayerPanel, useLayer } from './LayerPanel';
+import { LayerPanel, tempRange, useLayer } from './LayerPanel';
+import { SearchBar } from './SearchBar';
+import { PlaceCard } from './PlaceCard';
+import { isStale } from './format';
 import { FavoritesPanel } from './FavoritesPanel';
 import { type FavKind, useFavorites } from './favorites';
 import { StationSheet } from './StationSheet';
@@ -43,8 +47,8 @@ function MapController({ point, fly, onClear }: { point: { lat: number; lon: num
       const phone = size.x < 760;
       const p = map.latLngToContainerPoint([point.lat, point.lon]);
       // area libera: su telefono la parte alta, su desktop a destra del pannello laterale
-      const target = phone ? L.point(size.x / 2, size.y * 0.24) : L.point(400 + (size.x - 400) / 2, size.y / 2);
-      const visible = phone ? p.y < size.y * 0.32 && p.y > 80 : p.x > 410;
+      const target = phone ? L.point(size.x / 2 + 28, size.y * 0.24) : L.point(460 + (size.x - 460) / 2, size.y / 2);
+      const visible = phone ? p.y < size.y * 0.32 && p.y > 80 && p.x > 64 : p.x > 470;
       // panTo verso un centro assoluto (non panBy relativo): rieseguire l'effetto non somma gli spostamenti
       const center = map.latLngToContainerPoint(map.getCenter());
       if (!visible) map.panTo(map.containerPointToLatLng(center.add(p.subtract(target))), { animate: true, duration: 0.25 });
@@ -86,6 +90,8 @@ export default function App() {
     [layer, stations],
   );
   const icon = useCallback((s: Station, selected: boolean) => stationIcon(s, selected, layer), [layer]);
+  // Scala temperatura della banda adattata ai valori freschi di oggi
+  const range = useMemo(() => tempRange(stations.filter((s) => s.temp != null && !isStale(s)).map((s) => s.temp!)), [stations]);
   const clLabel = useCallback((items: Station[]) => clusterLabel(items, layer), [layer]);
 
   const station = sel?.kind === 'station' ? (stations.find((s) => s.id === sel.id) ?? null) : null;
@@ -104,7 +110,29 @@ export default function App() {
     setSel({ kind, id, fly: Date.now() });
     if (window.innerWidth < 760) setFavsOpen(false); // su telefono il pannello coprirebbe la mappa
   }, []);
-  const point = station ?? cam;
+  // Ricerca: località scelta (segnaposto + riquadro con stazione e webcam più vicine)
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [place, setPlace] = useState<(Place & { fly: number }) | null>(null);
+  const placeNear = useMemo(
+    () => (place ? { station: nearest(place, stations, 25), cam: nearest(place, webcams, CAM_RADIUS_KM) } : null),
+    [place, stations, webcams],
+  );
+  const pickPlace = useCallback((p: Place) => {
+    setSel(null);
+    setPlace({ ...p, fly: Date.now() });
+    setSearchOpen(false);
+  }, []);
+  const pickItem = useCallback((kind: FavKind, id: string) => {
+    setPlace(null);
+    setSearchOpen(false);
+    setSel({ kind, id, fly: Date.now() });
+  }, []);
+  const clearAll = useCallback(() => {
+    setSel(null);
+    setPlace(null);
+  }, []);
+  const point = station ?? cam ?? (sel ? null : place);
+  const fly = sel?.fly ?? (sel ? undefined : place?.fly);
 
   // Avviso discreto: fonte che non risponde, o errore della chiamata al proxy. L'app continua con il resto.
   const notices: string[] = [];
@@ -118,7 +146,10 @@ export default function App() {
   return (
     <div className={`app${favsOpen ? ' has-favs' : ''}`}>
       <header className="topbar">
-        <h1>Meteo Veneto · Trentino</h1>
+        <h1>
+          <span className="t-long">Meteo Veneto · Trentino</span>
+          <span className="t-short" aria-hidden="true">Meteo V·T</span>
+        </h1>
         <p className="topbar-time" aria-live="polite">
           {st.data ? (
             <>
@@ -132,6 +163,9 @@ export default function App() {
             'caricamento…'
           )}
         </p>
+        <button className={`icon-btn${searchOpen ? ' is-on' : ''}`} onClick={() => setSearchOpen((o) => !o)} aria-expanded={searchOpen} aria-label="Cerca una località">
+          <Search size={20} />
+        </button>
         <button
           className={`icon-btn favs-btn${favsOpen ? ' is-on' : ''}`}
           onClick={() => setFavsOpen((o) => !o)}
@@ -145,6 +179,7 @@ export default function App() {
           <RefreshCw size={20} className={st.loading || wc.loading ? 'spin' : undefined} />
         </button>
       </header>
+      {searchOpen && <SearchBar stations={stations} webcams={webcams} onPickPlace={pickPlace} onPickItem={pickItem} onClose={() => setSearchOpen(false)} />}
       {notices.length > 0 && (
         <p className="notice" role="status">
           {notices.join(' · ')}
@@ -176,10 +211,14 @@ export default function App() {
           clusterLabel={clLabel}
           onSelect={(s) => setSel({ kind: 'station', id: s.id })}
         />
-        <MapController point={point} fly={sel?.fly} onClear={clear} />
+        {place && <Marker position={[place.lat, place.lon]} icon={placeIcon} title={place.name} />}
+        <MapController point={point} fly={fly} onClear={clearAll} />
       </MapContainer>
 
-      <LayerPanel layer={layer} onChange={setLayer} count={withData} folded={point != null} />
+      <LayerPanel layer={layer} onChange={setLayer} count={withData} range={range} />
+      {place && !sel && placeNear && (
+        <PlaceCard place={place} station={placeNear.station} cam={placeNear.cam} version={version} onPick={pickItem} onClose={() => setPlace(null)} />
+      )}
 
       {station && (
         <StationSheet station={station} cam={stationCam} version={version} onClose={clear} fav={favs.has('station', station.id)} onToggleFav={() => favs.toggle('station', station.id)} />

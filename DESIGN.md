@@ -57,6 +57,29 @@ typography:
     fontWeight: 500
     lineHeight: 1.2
     letterSpacing: "0.06em"
+  list-name:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "18px"
+    fontWeight: 700
+    lineHeight: 1.15
+    letterSpacing: "0.02em"
+  caption:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "13px"
+    fontWeight: 500
+    lineHeight: 1.2
+    fontFeature: "tnum"
+  micro:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "12px"
+    fontWeight: 500
+    lineHeight: 1
+    fontFeature: "tnum"
+  fine-print:
+    fontFamily: "Barlow, system-ui, sans-serif"
+    fontSize: "11px"
+    fontWeight: 400
+    lineHeight: 1.3
   body:
     fontFamily: "Barlow, system-ui, sans-serif"
     fontSize: "16px"

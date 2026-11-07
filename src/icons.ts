@@ -85,3 +85,6 @@ export function clusterLabel(items: Station[], layer: Layer): string {
   if (layer === 'wind') return `max ${fmt(Math.round(hi))}`;
   return hi === 0 ? '' : `max ${fmt(hi, ' cm')}`;
 }
+
+/** Segnaposto della località cercata: goccia rossa con centro carta (come lo spillo su una carta). */
+export const placeIcon = L.divIcon({ className: 'pin', html: '<span class="pin-sym"></span>', iconSize: [28, 36], iconAnchor: [14, 34] });

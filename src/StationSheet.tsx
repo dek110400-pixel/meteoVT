@@ -4,6 +4,7 @@ import type { Station, Webcam } from '../server/types';
 import { age, cardinal, fmt, isStale, SOURCE_LABEL, when } from './format';
 import { WindArrow } from './WindArrow';
 import { WebcamImage } from './WebcamImage';
+import { HistoryCharts } from './HistoryCharts';
 
 const nd = (v: number | null) => (v == null ? 'nd' : '');
 
@@ -87,6 +88,8 @@ export function StationSheet({ station: s, cam, version, onClose, fav, onToggleF
           </div>
         )}
       </dl>
+
+      <HistoryCharts id={s.id} />
     </section>
   );
 }

@@ -45,3 +45,18 @@ export const windLength = (kmh: number) => Math.round(Math.min(14 + kmh * 0.9, 5
 
 /** Raggio del cerchio neve: cresce con la radice dell'altezza, così 2 m non coprono una valle. */
 export const snowRadius = (cm: number) => Math.round(Math.min(5 + Math.sqrt(Math.max(cm, 0)) * 2.4, 32));
+
+/**
+ * Intervallo della scala temperatura adattato ai valori di oggi (multipli di 5, almeno 15 °C di ampiezza).
+ * I colori restano assoluti (tempColor): cambia solo il tratto di scala mostrato.
+ */
+export function tempRange(temps: number[]): [number, number] {
+  if (!temps.length) return [-5, 15];
+  let lo = Math.floor(Math.min(...temps) / 5) * 5;
+  let hi = Math.ceil(Math.max(...temps) / 5) * 5;
+  while (hi - lo < 15) {
+    lo -= 5;
+    if (hi - lo < 15) hi += 5;
+  }
+  return [lo, hi];
+}

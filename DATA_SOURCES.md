@@ -202,3 +202,18 @@ La WSDL (`service.asmx?WSDL`) elenca ~80 operazioni; quelle utili:
 **Rischio tecnico:** ~300 richieste upstream per refresh. Su Vercel (piano Hobby) la function ha un limite di durata;
 le chiamate vanno parallelizzate con limite di concorrenza e la cache CDN (`s-maxage=600, stale-while-revalidate`)
 evita di rifarle a ogni utente.
+
+---
+
+## 5. Ricerca località — Nominatim (OpenStreetMap) ✅ verificata 2026-11-07
+- **URL:** `https://nominatim.openstreetmap.org/search?q=…&format=jsonv2&countrycodes=it&viewbox=10.3,47.2,13.2,44.7&bounded=1&limit=6&accept-language=it`
+- **Formato:** JSON, campi usati: `name`, `display_name`, `lat`, `lon`, `type`. Nessun header CORS → passa dal proxy `/api/geocode`.
+- **Policy d'uso:** max 1 richiesta/s, User-Agent identificativo, **vietata la ricerca a ogni tasto** → il client cerca solo all'invio;
+  il proxy mette in coda le richieste (≥1,1 s) e tiene in cache ogni testo per 1 giorno.
+- **Licenza:** dati © OpenStreetMap contributors, ODbL (attribuzione già presente sulla mappa).
+- Risultati con lo stesso nome entro ~300 m (es. frazione + fermata bus) vengono uniti.
+
+## 6. Storico 24 ore
+Nessuna fonte nuova: gli stessi file per stazione già usati per i dati live contengono la serie
+(ARPAV ~3 giorni ogni 30', Meteotrentino da ieri 00:00 ogni 15'). Il file ARPAV si ricava dall'id:
+`IDSTAZ` a 4 cifre + `.xml` (verificato su 233/233 stazioni).

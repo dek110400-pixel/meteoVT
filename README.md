@@ -6,7 +6,9 @@ Stile "carta escursionistica", pensata per lo smartphone all'aperto.
 
 - ~345 stazioni con temperatura, umidità, vento (velocità, raffica, direzione), pioggia, neve al suolo
 - ~700 webcam; nella scheda di ogni stazione la webcam più vicina entro 10 km
-- Layer **Temperatura / Vento / Neve** con legenda; il layer scelto resta dopo un refresh
+- Layer **Temperatura / Vento / Neve** in una banda stretta a sinistra (la scala della temperatura si adatta ai valori di oggi); il layer scelto resta dopo un refresh
+- **Ricerca località** (paesi, rifugi, passi, cime) con segnaposto e stazione/webcam più vicine
+- **Storico 24 ore** nella scheda della stazione: temperatura, vento e raffica, pioggia, neve
 - **Preferiti** (stellina) salvati nel browser, con pannello laterale e dati live
 - Dati più vecchi di 1 ora in grigio; un dato mancante è "n.d.", mai stimato
 - Aggiornamento ogni 10 minuti + pulsante ↻
@@ -42,6 +44,8 @@ Il primo caricamento delle webcam richiede ~10 s: il server controlla quali webc
 | `npm run test:sources` | chiama ARPAV e Meteotrentino e stampa 5 stazioni per fonte |
 | `npm run test:webcams` | chiama Windy e l'elenco ARPAV e stampa 5 webcam per fonte |
 | `npm run test:scales` | controlla scale colore, frecce del vento e cerchi della neve |
+| `npm run test:history` | scarica lo storico 24 h di una stazione per fonte e controlla la finestra temporale |
+| `npm run test:geocode` | cerca due località reali su OpenStreetMap (Nominatim) |
 
 ---
 
@@ -96,6 +100,8 @@ api/                  Vercel Functions (proxy verso le fonti)
   stations.ts         GET /api/stations   – stazioni ARPAV + Meteotrentino, cache 10 min
   webcams.ts          GET /api/webcams    – webcam Windy + ARPAV, cache 10 min
   webcam-image.ts     GET /api/webcam-image?id=N – proxy immagini ARPAV (solo id dell'elenco)
+  station-history.ts  GET /api/station-history?id=arpav:9 – ultime 24 ore di una stazione, cache 10 min
+  geocode.ts          GET /api/geocode?q=… – ricerca località (Nominatim), cache 1 giorno
 server/               normalizzazione dei dati nel modello unico (Station, Webcam)
 src/                  frontend React + Leaflet
 scripts/              test delle fonti e delle scale
