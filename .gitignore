@@ -1,0 +1,8 @@
+node_modules
+dist
+.env*.local
+.vercel
+.claude
+# impeccable: screenshot di revisione e bozze della scelta di stile, solo locali
+.impeccable/review/
+.impeccable/mocks/

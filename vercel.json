@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/stations.ts": {
+      "maxDuration": 60
+    },
+    "api/webcams.ts": {
+      "maxDuration": 60
+    }
+  }
+}

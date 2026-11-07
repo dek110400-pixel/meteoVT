@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T09:12:48.016Z",
+  "title": "Design System: Meteo Veneto · Trentino",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Map Paper",
+        "canonical": "#fbfaf6",
+        "tonalRamp": [
+          "#524e49",
+          "#8b8783",
+          "#c3c1bc",
+          "#fbfaf6",
+          "#fcfbf7",
+          "#fcfbf8",
+          "#fdfcf8",
+          "#fdfcf9"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Shaded Paper",
+        "canonical": "#f1ede3",
+        "tonalRamp": [
+          "#504a44",
+          "#868179",
+          "#bbb7ae",
+          "#f1ede3",
+          "#f5f2ea",
+          "#f8f5ef",
+          "#faf8f4",
+          "#fcfbf7"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Map Ink",
+        "canonical": "#2b2118",
+        "tonalRamp": [
+          "#1e1711",
+          "#231b14",
+          "#271e16",
+          "#2b2118",
+          "#6a635c",
+          "#9f9994",
+          "#c9c5c1",
+          "#e8e6e3"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "canonical": "#5e5246",
+        "tonalRamp": [
+          "#2b241d",
+          "#3c332b",
+          "#4d4338",
+          "#5e5246",
+          "#8e857c",
+          "#b5b0a8",
+          "#d5d2cc",
+          "#edebe7"
+        ]
+      },
+      "contour": {
+        "role": "neutral",
+        "displayName": "Contour Brown",
+        "canonical": "#6b4a2b",
+        "tonalRamp": [
+          "#2e2216",
+          "#432f1d",
+          "#573d24",
+          "#6b4a2b",
+          "#977f69",
+          "#bbac9c",
+          "#d9d0c6",
+          "#eeeae4"
+        ]
+      },
+      "trail": {
+        "role": "primary",
+        "displayName": "Trail Red",
+        "canonical": "#c8322a",
+        "tonalRamp": [
+          "#461c16",
+          "#71231d",
+          "#9d2b23",
+          "#c8322a",
+          "#d86f68",
+          "#e5a19c",
+          "#f0cac5",
+          "#f8e8e4"
+        ]
+      },
+      "water": {
+        "role": "secondary",
+        "displayName": "Lake Blue",
+        "canonical": "#2f6fa8",
+        "tonalRamp": [
+          "#1f2b35",
+          "#25425c",
+          "#2a5882",
+          "#2f6fa8",
+          "#6d99c0",
+          "#a0bdd5",
+          "#cad9e5",
+          "#e8eef1"
+        ]
+      },
+      "forest": {
+        "role": "tertiary",
+        "displayName": "Forest Green",
+        "canonical": "#3d7a46",
+        "tonalRamp": [
+          "#232e1d",
+          "#2c472b",
+          "#346138",
+          "#3d7a46",
+          "#77a17c",
+          "#a7c2a8",
+          "#cddccc",
+          "#eaefe7"
+        ],
+        "note": "Defined in :root, not yet used by any component."
+      },
+      "stale": {
+        "role": "neutral",
+        "displayName": "Weathered Grey",
+        "canonical": "#716659",
+        "tonalRamp": [
+          "#302922",
+          "#463d34",
+          "#5b5247",
+          "#716659",
+          "#9b9389",
+          "#beb9b1",
+          "#dad7d1",
+          "#efede9"
+        ],
+        "note": "Contract specified #9b8f80; darkened in build for 4.5:1 on paper."
+      },
+      "stale-fill": {
+        "role": "neutral",
+        "displayName": "Worn Paper",
+        "canonical": "#cfc7bb",
+        "tonalRamp": [
+          "#47413a",
+          "#756e65",
+          "#a29a90",
+          "#cfc7bb",
+          "#ddd7ce",
+          "#e8e4dd",
+          "#f2efea",
+          "#f8f7f3"
+        ]
+      },
+      "snow-fill": {
+        "role": "secondary",
+        "displayName": "Snow Fill",
+        "canonical": "rgba(159, 205, 233, 0.85)",
+        "tonalRamp": [
+          "#3b4246",
+          "#5d717c",
+          "#7e9fb3",
+          "#9fcde9",
+          "#bbdbee",
+          "#d3e7f2",
+          "#e6f0f5",
+          "#f4f7f7"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(43, 33, 24, 0.28)",
+        "tonalRamp": [
+          "#1e1711",
+          "#231b14",
+          "#271e16",
+          "#2b2118",
+          "#6a635c",
+          "#9f9994",
+          "#c9c5c1",
+          "#e8e6e3"
+        ]
+      }
+    },
+    "dataScales": {
+      "temperature": {
+        "type": "continuous",
+        "unit": "°C",
+        "stops": [
+          [
+            -20,
+            "#24317a"
+          ],
+          [
+            -10,
+            "#2f6fb8"
+          ],
+          [
+            0,
+            "#9fcde9"
+          ],
+          [
+            10,
+            "#f1e39a"
+          ],
+          [
+            20,
+            "#f0a24f"
+          ],
+          [
+            30,
+            "#c8322a"
+          ],
+          [
+            40,
+            "#6e1712"
+          ]
+        ],
+        "source": "src/scales.ts TEMP_STOPS"
+      },
+      "wind": {
+        "type": "classes",
+        "unit": "km/h",
+        "classes": [
+          [
+            "< 10",
+            "#7c9a74"
+          ],
+          [
+            "10–20",
+            "#2f6fa8"
+          ],
+          [
+            "20–40",
+            "#d99a1e"
+          ],
+          [
+            "40–60",
+            "#c8322a"
+          ],
+          [
+            "> 60",
+            "#6b2a7a"
+          ]
+        ],
+        "arrowLength": "min(14 + kmh*0.9, 56) px",
+        "source": "src/scales.ts WIND_CLASSES"
+      },
+      "snow": {
+        "type": "size",
+        "unit": "cm",
+        "radius": "min(5 + sqrt(cm)*2.4, 32) px",
+        "fill": "rgba(159, 205, 233, 0.85)",
+        "border": "2px solid #2f6fa8"
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Station name in the sheet, uppercase; 22px favourites heading, 18px favourite rows."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Top bar title, uppercase; 18px under 420px."
+      },
+      "value-hero": {
+        "displayName": "Value hero",
+        "purpose": "Temperature in the station sheet."
+      },
+      "value": {
+        "displayName": "Value",
+        "purpose": "Reading-grid values, tabular."
+      },
+      "map-lettering": {
+        "displayName": "Map lettering",
+        "purpose": "Values beside map symbols and clusters, with paper halo; 18px when selected."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Times, altitude/province, captions, notices."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase reading labels; legend ticks at 13px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Empty-state sentences only, max 36ch."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lettering-halo",
+        "value": "text-shadow: -1.5px 0 #fbfaf6, 1.5px 0 #fbfaf6, 0 -1.5px #fbfaf6, 0 1.5px #fbfaf6, 0 0 3px #fbfaf6",
+        "purpose": "Cartographic knockout behind map lettering; not elevation."
+      },
+      {
+        "name": "temp-symbol-ring",
+        "value": "box-shadow: 0 0 0 3px #2b2118",
+        "purpose": "Ink ring around temperature-filled station diamonds; used as a stroke."
+      }
+    ],
+    "borders": [
+      {
+        "name": "rule",
+        "value": "2px solid #2b2118",
+        "purpose": "Frame of every panel and the top bar."
+      },
+      {
+        "name": "hair",
+        "value": "1px solid rgba(43, 33, 24, 0.28)",
+        "purpose": "Dividers inside panels."
+      },
+      {
+        "name": "focus",
+        "value": "outline: 3px solid #2f6fa8; outline-offset: 2px",
+        "purpose": "Global :focus-visible."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Sheet rise (translateY 24px) and favourites slide (translateX 24px), 200ms."
+      },
+      {
+        "name": "spin",
+        "value": "0.9s linear infinite",
+        "purpose": "Refresh icon while loading."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none",
+        "purpose": "All animations off under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "420px",
+        "purpose": "max-width: smaller title, hide count, tighter tabs."
+      },
+      {
+        "name": "panel",
+        "value": "760px",
+        "purpose": "min-width: sheet becomes 380px left panel, favourites 360px."
+      }
+    ],
+    "basemap": {
+      "tiles": "OpenTopoMap",
+      "treatment": "opacity 0.5; filter saturate(0.6)"
+    }
+  },
+  "components": [
+    {
+      "name": "Top Bar",
+      "kind": "nav",
+      "refersTo": "topbar",
+      "description": "Title strip over the map with data time and actions.",
+      "html": "<header class=\"ds-topbar\"><h1>Meteo Veneto · Trentino</h1><span class=\"ds-time\"><strong>13:53</strong></span><button class=\"ds-icon-btn\" aria-label=\"Preferiti\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11.5 2.3a.5.5 0 0 1 .9 0l2.3 4.7a2 2 0 0 0 1.5 1.1l5.2.8a.5.5 0 0 1 .3.9l-3.8 3.7a2 2 0 0 0-.6 1.8l.9 5.2a.5.5 0 0 1-.8.6l-4.6-2.5a2 2 0 0 0-1.9 0l-4.6 2.5a.5.5 0 0 1-.8-.6l.9-5.2a2 2 0 0 0-.6-1.8L2.4 9.8a.5.5 0 0 1 .3-.9l5.2-.8a2 2 0 0 0 1.5-1.1z\"/></svg></button></header>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}:focus-visible{outline:3px solid var(--water);outline-offset:2px}.ds-topbar{display:flex;align-items:center;gap:12px;height:56px;padding:0 6px 0 14px;background:var(--paper);border-bottom:var(--rule);color:var(--ink)}.ds-topbar h1{margin:0;font:700 20px/1 var(--cond);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}.ds-time{margin-left:auto;font:500 15px/1.1 var(--cond);color:var(--ink-2);font-variant-numeric:tabular-nums}.ds-time strong{color:var(--ink)}.ds-icon-btn{width:44px;height:44px;display:grid;place-items:center;background:transparent;border:0;color:var(--ink);cursor:pointer}.ds-icon-btn:hover{background:var(--paper-2)}.ds-icon-btn:active{background:var(--stale-fill)}"
+    },
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "44px square action, transparent at rest.",
+      "html": "<button class=\"ds-icon-btn\" aria-label=\"Preferito\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11.5 2.3a.5.5 0 0 1 .9 0l2.3 4.7a2 2 0 0 0 1.5 1.1l5.2.8a.5.5 0 0 1 .3.9l-3.8 3.7a2 2 0 0 0-.6 1.8l.9 5.2a.5.5 0 0 1-.8.6l-4.6-2.5a2 2 0 0 0-1.9 0l-4.6 2.5a.5.5 0 0 1-.8-.6l.9-5.2a2 2 0 0 0-.6-1.8L2.4 9.8a.5.5 0 0 1 .3-.9l5.2-.8a2 2 0 0 0 1.5-1.1z\"/></svg></button><button class=\"ds-icon-btn is-on\" aria-label=\"Preferito attivo\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11.5 2.3a.5.5 0 0 1 .9 0l2.3 4.7a2 2 0 0 0 1.5 1.1l5.2.8a.5.5 0 0 1 .3.9l-3.8 3.7a2 2 0 0 0-.6 1.8l.9 5.2a.5.5 0 0 1-.8.6l-4.6-2.5a2 2 0 0 0-1.9 0l-4.6 2.5a.5.5 0 0 1-.8-.6l.9-5.2a2 2 0 0 0-.6-1.8L2.4 9.8a.5.5 0 0 1 .3-.9l5.2-.8a2 2 0 0 0 1.5-1.1z\"/></svg></button>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}:focus-visible{outline:3px solid var(--water);outline-offset:2px}.ds-icon-btn{width:44px;height:44px;display:inline-grid;place-items:center;background:transparent;border:0;color:var(--ink-2);cursor:pointer}.ds-icon-btn:hover{background:var(--paper-2)}.ds-icon-btn:active{background:var(--stale-fill)}.ds-icon-btn.is-on{color:var(--trail)}"
+    },
+    {
+      "name": "Layer Tabs",
+      "kind": "chip",
+      "refersTo": "layer-tab",
+      "description": "Three-way layer radiogroup at the top of the legend box.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button role=\"radio\" aria-checked=\"false\">Temperatura</button><button role=\"radio\" aria-checked=\"true\" class=\"on\">Vento</button><button role=\"radio\" aria-checked=\"false\">Neve</button></div>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}:focus-visible{outline:3px solid var(--water);outline-offset:2px}.ds-seg{display:grid;grid-template-columns:repeat(3,1fr);width:300px;border:var(--rule);background:var(--paper)}.ds-seg button{min-height:44px;padding:0 6px;border:0;border-left:var(--hair);background:var(--paper);color:var(--ink-2);font:700 15px/1 var(--cond);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}.ds-seg button:first-child{border-left:0}.ds-seg button:hover{background:var(--paper-2);color:var(--ink)}.ds-seg button.on{background:var(--ink);color:var(--paper)}"
+    },
+    {
+      "name": "Legend Box",
+      "kind": "card",
+      "refersTo": "legend-box",
+      "description": "Cartiglio: framed paper box with scale bar and ticks.",
+      "html": "<div class=\"ds-legend\"><p class=\"t\">Temperatura dell'aria · °C</p><div class=\"bar\"></div><div class=\"ticks\"><span>-20</span><span>-10</span><span>0</span><span>10</span><span>20</span><span>30</span><span>40 °C</span></div></div>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-legend{width:300px;padding:7px 10px 8px;background:var(--paper);border:var(--rule);color:var(--ink)}.ds-legend .t{margin:0;font:500 14px/1.2 var(--cond)}.ds-legend .bar{height:10px;margin-top:6px;border:1px solid var(--ink);background:linear-gradient(90deg,#24317a 0%,#2f6fb8 16.7%,#9fcde9 33.3%,#f1e39a 50%,#f0a24f 66.7%,#c8322a 83.3%,#6e1712 100%)}.ds-legend .ticks{display:flex;justify-content:space-between;margin-top:2px;font:500 13px/1.2 var(--cond);color:var(--ink-2);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Reading Grid",
+      "kind": "card",
+      "refersTo": "reading-cell",
+      "description": "Hairline grid of live readings in the station sheet; n.d. for missing.",
+      "html": "<dl class=\"ds-readings\"><div class=\"r wide\"><dt>Temperatura</dt><dd class=\"big\">8,4°</dd></div><div class=\"r\"><dt>Vento da SE</dt><dd>3,6 <small>km/h</small></dd></div><div class=\"r\"><dt>Raffica</dt><dd class=\"nd\">n.d.</dd></div></dl>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-readings{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:0;width:380px;background:rgba(43,33,24,.28);border-top:var(--rule);border-bottom:var(--hair)}.ds-readings .r{padding:8px 14px 10px;background:var(--paper)}.ds-readings .wide{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between}.ds-readings dt{font:500 14px/1.2 var(--cond);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}.ds-readings dd{margin:2px 0 0;font:700 24px/1.15 var(--cond);font-variant-numeric:tabular-nums;color:var(--ink)}.ds-readings dd small{font:500 15px var(--cond);color:var(--ink-2)}.ds-readings .big{font-size:44px;line-height:1}.ds-readings .nd{font-weight:500;color:var(--stale)}"
+    },
+    {
+      "name": "Station Symbol",
+      "kind": "custom",
+      "refersTo": "station-symbol",
+      "description": "Signature: trail-red diamond with value lettered beside it like a spot height; stale variant in grey.",
+      "html": "<span class=\"ds-st\"><span class=\"sym\"></span><span class=\"lbl\">8,3</span></span><span class=\"ds-st stale\"><span class=\"sym\"></span><span class=\"lbl\">4,1°</span></span>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-st{position:relative;display:inline-block;width:20px;height:20px;margin:8px 48px 8px 8px}.ds-st .sym{position:absolute;left:4px;top:4px;width:12px;height:12px;transform:rotate(45deg);background:var(--trail);outline:2px solid var(--paper)}.ds-st .lbl{position:absolute;left:20px;top:-1px;white-space:nowrap;font:700 16px/1 var(--cond);color:var(--ink);font-variant-numeric:tabular-nums;text-shadow:-1.5px 0 var(--paper),1.5px 0 var(--paper),0 -1.5px var(--paper),0 1.5px var(--paper)}.ds-st.stale .sym{background:var(--paper);outline-color:var(--stale)}.ds-st.stale .lbl{color:var(--stale)}"
+    },
+    {
+      "name": "Cluster Roundel",
+      "kind": "custom",
+      "refersTo": "cluster-roundel",
+      "description": "Paper roundel with ink count; webcam clusters are inverted and smaller.",
+      "html": "<span class=\"ds-cl\">12</span><span class=\"ds-cl cam\">5</span>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-cl{display:inline-grid;place-items:center;width:40px;height:40px;margin:4px;border-radius:50%;background:var(--paper);border:var(--rule);font:700 16px/1 var(--cond);color:var(--ink)}.ds-cl.cam{width:30px;height:30px;background:var(--ink);color:var(--paper);border:2px solid var(--paper);font-size:13px}"
+    },
+    {
+      "name": "Favourite Row",
+      "kind": "custom",
+      "refersTo": "favourite-row",
+      "description": "Saved station row: name, meta, values, hairline below.",
+      "html": "<div class=\"ds-fav\"><span class=\"txt\"><span class=\"name\">Lamon - Sala</span><span class=\"meta\">650 m · BL · 13:30</span></span><span class=\"vals\"><span class=\"temp\">8,4°</span><span>3,6 km/h</span></span></div>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-fav{display:flex;align-items:center;gap:10px;width:360px;min-height:64px;padding:10px 14px;background:var(--paper);border-bottom:var(--hair);color:var(--ink);cursor:pointer}.ds-fav:hover{background:var(--paper-2)}.ds-fav .txt{flex:1;min-width:0;display:flex;flex-direction:column}.ds-fav .name{font:700 18px/1.15 var(--cond);text-transform:uppercase;letter-spacing:.02em}.ds-fav .meta{font:500 14px/1.3 var(--cond);color:var(--contour);font-variant-numeric:tabular-nums}.ds-fav .vals{display:flex;flex-direction:column;align-items:flex-end;font:600 15px/1.2 var(--cond);font-variant-numeric:tabular-nums}.ds-fav .temp{font:700 26px/1 var(--cond)}"
+    },
+    {
+      "name": "Notice",
+      "kind": "custom",
+      "refersTo": "notice",
+      "description": "Discreet failure notice when a data source is down.",
+      "html": "<p class=\"ds-notice\">Meteotrentino non risponde: dati ARPAV e webcam disponibili</p>",
+      "css": ":host{--paper:#fbfaf6;--paper-2:#f1ede3;--ink:#2b2118;--ink-2:#5e5246;--contour:#6b4a2b;--trail:#c8322a;--water:#2f6fa8;--stale:#716659;--stale-fill:#cfc7bb;--rule:2px solid var(--ink);--hair:1px solid rgba(43,33,24,0.28);--cond:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif}.ds-notice{display:inline-block;margin:0;padding:6px 12px;background:var(--paper);border:1px solid var(--trail);color:var(--trail);font:500 15px/1.25 var(--cond);text-align:center}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Carta Escursionistica",
+    "overview": "The whole app is a 1:25.000 hiking map that happens to be live. Readings are cartographic symbols with their numbers lettered beside them like spot heights; every panel is a legend box (cartiglio) framed by a 2px ink rule on warm paper. The OpenTopoMap base is printed a step back (50% opacity, 60% saturation) so the weather reads first. Density is map-like: tight condensed lettering, hairline grids, no decoration that is not also information.\n\nIt is built for one thumb in direct sunlight: light paper ground, near-black brown ink, 44px targets, and colour that never carries a value alone. It rejects coloured blobs and floating rounded white popups.",
+    "keyCharacteristics": [
+      "Paper, ink and trail red; colour scales only inside map symbols and legends.",
+      "Values lettered beside symbols with a paper halo, like spot heights.",
+      "2px ink rules frame panels; 1px hairlines divide inside them.",
+      "Flat: no drop shadows, no rounded cards, square corners on every container.",
+      "Stale data (>1 h) is grey, missing data is \"n.d.\", never estimated."
+    ],
+    "rules": [
+      {
+        "name": "The Value-Beside-Colour Rule",
+        "body": "A colour never stands alone: every coloured symbol has its number lettered next to it, and every legend's last tick carries the unit (\"40 °C\", \"> 60 km/h\", \"150 cm\").",
+        "section": "colors"
+      },
+      {
+        "name": "The Grey Means Old Rule",
+        "body": "Weathered Grey is the only stale signal: symbols turn paper-filled with a grey outline, values and timestamps turn grey. Never use grey for decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Every number uses `font-variant-numeric: tabular-nums` so live values do not jitter on refresh.",
+        "section": "typography"
+      },
+      {
+        "name": "The Legend-Box Rule",
+        "body": "Anything that sits on the map is a paper box with a 2px ink rule and square corners. If it needs to feel \"above\", make the rule heavier, never add a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do frame every floating panel with a 2px ink rule on paper, square corners.",
+      "Do letter the number beside every coloured symbol, with the paper halo.",
+      "Do use Barlow Condensed with tabular figures for every value, label and name.",
+      "Do turn stale data Weathered Grey (#716659) and print missing data as \"n.d.\".",
+      "Do keep targets at 44px minimum and use the Lake Blue 3px focus outline.",
+      "Do keep the base map faded (opacity 0.5, saturate 0.6) so readings lead."
+    ],
+    "donts": [
+      "Don't add drop shadows or rounded cards; rounding is for map symbols only.",
+      "Don't convey a value by colour alone or by hover alone.",
+      "Don't use Trail Red for anything except stations, favourites, selection and failure notices.",
+      "Don't use grey as decoration; it means \"older than an hour\".",
+      "Don't estimate or interpolate a missing reading."
+    ]
+  }
+}
